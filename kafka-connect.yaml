@@ -1,0 +1,13 @@
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaConnect
+metadata:
+  name: my-kafka-connect
+  annotations:
+    strimzi.io/use-connector-resources: "true"
+spec:
+  image: yourdockerhubuser/kafka-connect-jdbc:latest
+  replicas: 1
+  bootstrapServers: broker1:9092,broker2:9092,broker3:9092
+  config:
+    key.converter.schema.registry.url: http://schema-registry:8081
+    value.converter.schema.registry.url: http://schema-registry:8081

@@ -1,0 +1,24 @@
+apiVersion: kafka.strimzi.io/v1alpha1
+kind: KafkaConnector
+metadata:
+  name: "locations-connector"
+  labels:
+    strimzi.io/cluster: my-kafka-connect
+spec:
+  class: io.confluent.connect.jdbc.JdbcSinkConnector
+  tasksMax: 1
+  config:
+    connection.url: "jdbc:postgresql://pghost:5432/yourdatabase"
+    connection.user: "youruser@pghost"
+    connection.password: "yourpassword"
+    table.name.format: "yourschema.${topic}"
+    topics: locations_as_avro
+    key.converter: io.confluent.connect.avro.AvroConverter
+    value.converter: io.confluent.connect.avro.AvroConverter
+    auto.create: true
+    auto.evolve: true
+    insert.mode: "upsert"
+    pk.mode: "record_value"
+    pk.fields: "PROFILEID"
+    key.converter.schema.registry.url: http://schema-registry:8081
+    value.converter.schema.registry.url: http://schema-registry:8081

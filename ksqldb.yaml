@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: default
+  name: ksqldb-server
+  labels:
+    app: ksqldb-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ksqldb-server
+  template:
+    metadata:
+      labels:
+        app: ksqldb-server
+    spec:
+      containers:
+      - name: ksqldb-server
+        image: confluentinc/cp-ksqldb-server:5.5.1
+        ports:
+        - containerPort: 8088
+        imagePullPolicy: Always
+        env:
+        - name: KSQL_LISTENERS
+          value: http://0.0.0.0:8088
+        - name: KSQL_BOOTSTRAP_SERVERS
+          value: broker1:9092,broker2:9092,broker3:9092
+        - name: KSQL_KSQL_SCHEMA_REGISTRY_URL
+          value: http://schema-registry:8081
+        - name: KSQL_KSQL_CONNECT_URL
+          value: http://my-kafka-connect-connect-api:8083
